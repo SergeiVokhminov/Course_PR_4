@@ -1,0 +1,24 @@
+{% extends 'mailing/base.html' %}
+{% block title %}Главная страница{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'users:login' %}" role="button">Вход</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'users:register' %}" role="button">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
