@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class Recipient(models.Model):
     """Модель получателя рассылки."""
@@ -19,6 +21,9 @@ class Recipient(models.Model):
     comment = models.TextField(
         verbose_name="Комментарий", blank=True, null=True, help_text="Введите комментарий"
     )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="recipient", verbose_name="Владелец"
+    )
 
     def __str__(self):
         return f"{self.email}"
@@ -33,6 +38,9 @@ class Message(models.Model):
     """Модель сообщения."""
     subject = models.CharField(max_length=100, verbose_name="Тема сообщения", help_text="Введите тему сообщения")
     text = models.TextField(verbose_name="Текст сообщения", help_text="Введите текст сообщения")
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="message", verbose_name="Владелец"
+    )
 
     def __str__(self):
         return self.subject
@@ -64,6 +72,9 @@ class Mailing(models.Model):
     )
     recipients = models.ManyToManyField(
         Recipient, verbose_name="Получатели", help_text="Выберите получателей для рассылки"
+    )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="newsletter", verbose_name="Владелец"
     )
 
     def __str__(self):
