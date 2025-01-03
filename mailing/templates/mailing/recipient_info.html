@@ -1,0 +1,30 @@
+{% extends 'mailing/base.html' %}
+{% block title %}Информация по получателям рассылок{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            {% if user.is_authenticated %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'mailing:recipient_list' %}" role="button">
+                            Список получателей рассылок
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'mailing:recipient_create' %}" role="button">
+                            Добавить получателя
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
