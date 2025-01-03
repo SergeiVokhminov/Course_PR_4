@@ -5,9 +5,7 @@ from users.models import User
 
 class Recipient(models.Model):
     """Модель получателя рассылки."""
-    email = models.EmailField(
-        unique=True, verbose_name="Электронная почта", help_text="Введите адрес электронной почты получателя"
-    )
+    email = models.EmailField(unique=True, verbose_name="Электронная почта")
     first_name = models.CharField(max_length=250, verbose_name="Имя получателя")
     last_name = models.CharField(max_length=250, verbose_name="Фамилия получателя")
     patronymic = models.CharField(max_length=250, null=True, blank=True, verbose_name="Отчество получателя")
@@ -18,11 +16,9 @@ class Recipient(models.Model):
         verbose_name="URL",
         help_text="Уникальное имя формируется из фамилии и имени",
     )
-    comment = models.TextField(
-        verbose_name="Комментарий", blank=True, null=True, help_text="Введите комментарий"
-    )
+    comment = models.TextField(verbose_name="Комментарий", blank=True, null=True)
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="recipient", verbose_name="Владелец"
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="recipients", verbose_name="Владелец"
     )
 
     def __str__(self):
@@ -31,24 +27,24 @@ class Recipient(models.Model):
     class Meta:
         verbose_name = "Получатель"
         verbose_name_plural = "Получатели"
-        ordering = ["first_name", "last_name", "slug"]
+        ordering = ["email", "first_name", "last_name"]
 
 
 class Message(models.Model):
     """Модель сообщения."""
-    subject = models.CharField(max_length=100, verbose_name="Тема сообщения", help_text="Введите тему сообщения")
-    text = models.TextField(verbose_name="Текст сообщения", help_text="Введите текст сообщения")
+    topic = models.CharField(max_length=100, verbose_name="Тема сообщения")
+    text = models.TextField(verbose_name="Текст сообщения")
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="message", verbose_name="Владелец"
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="messages", verbose_name="Владелец"
     )
 
     def __str__(self):
-        return self.subject
+        return self.topic
 
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
-        ordering = ["subject"]
+        ordering = ["topic"]
 
 
 class Mailing(models.Model):
@@ -78,22 +74,20 @@ class Mailing(models.Model):
     )
 
     def __str__(self):
-        return f"{self.message.subject} - {self.status}"
+        return f"{self.message.topic} - {self.status}"
 
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ["status", "message"]
-        # permissions = [
-        #     ("can_finish_mailing", "can finish mailing"),
-        # ]
+        permissions = [("can_finish_mailing", "can finish mailing")]
 
 
 class Mailing_Attempts(models.Model):
     """Модель попыток рассылки."""
     SUCCESS = "успешно"
     FAILURE = "неуспешно"
-    ATTEMPT_STATUS_CHOICES = [(SUCCESS, "успешно"), (FAILURE, "неуспешно")]
+    ATTEMPT_STATUS_CHOICES = [(SUCCESS, "успешно"), (FAILURE, "не успешно")]
     attempt_date = models.DateTimeField(
         verbose_name="Дата попытки", help_text="Введите дату и время попытки", auto_now_add=True
     )
@@ -111,9 +105,17 @@ class Mailing_Attempts(models.Model):
         Mailing, on_delete=models.CASCADE, verbose_name="Рассылка", help_text="Выберите рассылку для попытки",
         null=True, blank=True,
     )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Владелец",
+        on_delete=models.CASCADE,
+        related_name="mailing_attempts",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return f"{self.mailing.message.subject} - {self.attempt_status} - {self.mail_server_response} - {self.attempt_date}"
+        return f"{self.mailing.message.topic} - {self.attempt_status} - {self.mail_server_response} - {self.attempt_date}"
 
     class Meta:
         verbose_name = "Попытка рассылки"
