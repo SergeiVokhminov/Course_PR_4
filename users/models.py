@@ -6,11 +6,15 @@ class User(AbstractUser):
     """Модель пользователя."""
     username = None
     email = models.EmailField(unique=True, verbose_name="Электронная почта")
+    first_name = models.CharField(
+        max_length=50, verbose_name="Имя", blank=True, null=True, help_text="Введите Ваше имя"
+    )
+    last_name = models.CharField(
+        max_length=50, verbose_name="Фамилия", blank=True, null=True, help_text="Введите Вашу фамилию"
+    )
     phone_number = models.CharField(
-        max_length=35,
-        verbose_name="Номер телефона",
-        blank=True,
-        null=True)
+        max_length=35, verbose_name="Номер телефона", blank=True, null=True, help_text="Введите номер телефона"
+    )
     avatar = models.ImageField(
         upload_to="photo/avatars/",
         verbose_name="Аватар",

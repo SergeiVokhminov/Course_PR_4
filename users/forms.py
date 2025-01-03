@@ -1,28 +1,25 @@
 from django import forms
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 
 from users.models import User
 
 
 class UserRegisterForm(UserCreationForm):
-    phone_number = forms.CharField(max_length=15, required=False, help_text="Введите номер телефона")
-    country = forms.CharField(max_length=50, required=False, help_text="Укажите Вашу страну проживания")
+    """Форма регистрации."""
 
     class Meta:
         model = User
-        fields = ["email", "phone_number", "avatar", "country", "password1", "password2"]
+        fields = ["email", "first_name", "last_name", "phone_number", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
         )
+        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
+        self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["phone_number"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите номер телефона"}
-        )
-        self.fields["avatar"].widget.attrs.update({"class": "form-control", "placeholder": "Загрузите Ваш аватар"})
-        self.fields["country"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Укажите Вашу страну проживания"}
         )
         self.fields["password1"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields["password2"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
@@ -35,8 +32,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    phone_number = forms.CharField(max_length=15, required=False, help_text="Введите номер телефона")
-    country = forms.CharField(max_length=50, required=False, help_text="Укажите Вашу страну проживания")
+    """"""
 
     class Meta:
         model = User
@@ -47,15 +43,13 @@ class UserUpdateForm(forms.ModelForm):
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
         )
-        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите Ваше имя"})
-        self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите Вашу фамилию"})
+        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
+        self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["phone_number"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите номер телефона"}
         )
-        self.fields["avatar"].widget.attrs.update({"class": "form-control", "placeholder": "Загрузите Ваш аватар"})
-        self.fields["country"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Укажите Вашу страну проживания"}
-        )
+        self.fields["avatar"].widget.attrs.update({"class": "form-control", "placeholder": "Загрузите фотографию"})
+        self.fields["country"].widget.attrs.update({"class": "form-control", "placeholder": "Введите страну проживания"})
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
@@ -66,23 +60,22 @@ class UserUpdateForm(forms.ModelForm):
     def clean_email_address(self):
         email_address = self.cleaned_data.get("email")
         if User.objects.filter(email=email_address).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError("Этот адрес электронной почты уже зарегистрирован.")
+            raise forms.ValidationError("Этот адрес электронной почты уже зарегистрирован!")
         return email_address
 
 
 class UserForgotPasswordForm(PasswordResetForm):
-    """Запрос на восстановление пароля"""
+    """Запрос на восстановление пароля."""
     def __init__(self, *args, **kwargs):
-        """Обновление стилей формы"""
+        """Обновление стилей формы."""
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
 
 
 class UserSetNewPasswordForm(SetPasswordForm):
-    """Изменение пароля пользователя после подтверждения"""
+    """."""
     def __init__(self, *args, **kwargs):
-        """Обновление стилей формы"""
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
