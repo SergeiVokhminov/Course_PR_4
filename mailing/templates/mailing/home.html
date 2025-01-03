@@ -4,6 +4,44 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            {% if user.is_authenticated %}
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:message_info' %}" role="button">
+                        Посмотреть информацию о моих сообщения
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:recipient_info' %}" role="button">
+                        Посмотреть информацию о получателях рассылок
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:mailing_info' %}" role="button">
+                        Посмотреть информацию о моих рассылках
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="btn btn-primary" href="{% url 'mailing:main' %}" role="button">
+                        Общая информация по рассылкам
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+<!--                <div class="card shadow-sm">-->
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" role="button">Выход</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-header">
@@ -14,10 +52,13 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-header">
-                        <a class="btn btn-primary" href="{% url 'users:register' %}" role="button">Зарегистрироваться</a>
+                        <a class="btn btn-primary" href="{% url 'users:register' %}" role="button">
+                            Зарегистрироваться
+                        </a>
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

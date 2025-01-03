@@ -1,27 +1,47 @@
-<div class="collapse text-bg-dark" id="navbarHeader">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8 col-md-7 py-4">
-                <h4>MyOnlineStore</h4>
-                <p class="text-body-secondary">Отличное место для покупки современной техники!</p>
-            </div>
-            <div class="col-sm-4 offset-md-1 py-4">
-                <h4>Навигация</h4>
-                <ul class="list-unstyled">
-                    <li><a href="{% url 'mailing:home' %}" class="text-white">Главная</a></li>
-                    <li><a href="{% url 'users:login' %}" class="text-white">Вход</a></li>
-                    <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="navbar navbar-dark bg-dark shadow-sm">
-    <div class="container">
-        <a href="#" class="navbar-brand d-flex align-items-center">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">C|У|Р</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:home' %}" role="button">Главная</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:message_list' %}" role="button">
+                        Информация о сообщениях
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/" role="button">
+                        Информация о получателях рассылок
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/" role="button">
+                        Информация о рассылках
+                    </a>
+                </li>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link">Выход</button>
+                </form>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:login' %}" role="button">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:register' %}" role="button">Регистрация</a>
+                </li>
+                {% endif %}
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Поиск">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+            </form>
+        </div>
     </div>
-</div>
+</nav>
