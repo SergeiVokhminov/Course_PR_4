@@ -3,7 +3,7 @@ from django.urls import path
 
 from users.apps import UsersConfig
 from users.views import (UserRegisterView, UserListView, UserDetailsView, UserUpdateView, BlockUserView,
-                         email_verification, UserForgotPasswordView, UserPasswordResetConfirmView)
+                         email_verification, UserForgotPasswordView, UserPasswordResetConfirmView, UserInfoView)
 
 app_name = UsersConfig.name
 
@@ -17,5 +17,6 @@ urlpatterns = [
     path("user_list/", UserListView.as_view(), name="user_list"),
     path("user/<int:pk>/", UserDetailsView.as_view(), name="user_detail"),
     path("user/<int:pk>/update/", UserUpdateView.as_view(), name="user_update"),
-    path("user/<int:pk>/block", BlockUserView.as_view(), name="users_block"),
+    path("user/<int:pk>/block", BlockUserView.as_view(), name="user_block"),
+    path("user_info/", UserInfoView.as_view(), name="user_info"),
 ]
