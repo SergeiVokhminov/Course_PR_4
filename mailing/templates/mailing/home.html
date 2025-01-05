@@ -8,28 +8,35 @@
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:message_info' %}" role="button">
-                        Сообщения
+                        Управление сообщениям
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:recipient_info' %}" role="button">
-                        Получатели рассылок
+                        Управление получателями рассылок
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:mailing_info' %}" role="button">
-                        Рассылки
+                        Управление рассылками
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:report_info' %}" role="button">
+                        Отчеты по рассылкам
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'users:user_info' %}" role="button">
-                        Пользователи
+                        Пользователи сайта
                     </a>
                 </div>
             </div>
@@ -37,13 +44,6 @@
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'users:user_detail' user.pk %}" role="button">
                         Профиль
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <a class="btn btn-primary" href="{% url 'mailing:main' %}" role="button">
-                        Общая информация по моим рассылкам
                     </a>
                 </div>
             </div>
