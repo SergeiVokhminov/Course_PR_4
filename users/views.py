@@ -11,11 +11,12 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, ListView, View, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from users.forms import UserRegisterForm, UserUpdateForm, UserForgotPasswordForm, UserSetNewPasswordForm
+from users.forms import UserRegisterForm, UserForm, UserForgotPasswordForm, UserSetNewPasswordForm
 from users.models import User
 
 
 class UserInfoView(TemplateView):
+    """Контролер представления страницы с информации о пользователях."""
     template_name = "users/user_info.html"
 
 
@@ -26,31 +27,21 @@ class UserRegisterView(CreateView):
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
 
-    # def form_valid(self, form):
-    #     """Верификация зарегистрированного пользователя"""
-    #     user = form.save()
-    #     user.is_active = False
-    #     token = secrets.token_hex(16)
-    #     user.token = token
-    #     user.save()
-    #     host = self.request.get_host()
-    #     url = f"http://{host}/users//{token}/"
-    #
-    #     self.send_welcome_mail(user.email, url)
-    #     return super().form_valid(form)
-    #
-    # def send_welcome_mail(self, user_email, url):
-    #     """Отправка приветственного сообщения."""
-    #     subject = "Добро пожаловать на наш сайт"
-    #     message = (
-    #         f"Спасибо, что зарегистрировались в нашем интернет магазине!\n"
-    #         f"Для подтверждения регистрации перейдите по ссылке {url}"
-    #     )
-    #     from_email = settings.EMAIL_HOST_USER
-    #     recipient_list = [
-    #         user_email,
-    #     ]
-    #     send_mail(subject, message, from_email, recipient_list)
+    def form_valid(self, form):
+        user = form.save()
+        user.is_active = False
+        token = secrets.token_hex(16)
+        user.token = token
+        user.save()
+        host = self.request.get_host()
+        url = f"http://{host}/users/email_confirm/{token}/"
+        send_mail(
+            subject="Подтверждение регистрации.",
+            message=f"Для активации вашего аккаунта перейдите по ссылке: {url}",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+        )
+        return super().form_valid(form)
 
 
 def email_verification(request, token):
@@ -58,7 +49,7 @@ def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
-    return redirect(reverse("users:login"))
+    return redirect("users:login")
 
 
 class UserDetailsView(DetailView):
@@ -70,7 +61,7 @@ class UserDetailsView(DetailView):
 class UserUpdateView(UpdateView):
     """Контроллер обновления профиля пользователя."""
     model = User
-    form_class = UserUpdateForm
+    form_class = UserForm
     template_name = "users/user_form.html"
     success_url = reverse_lazy("mailing:home")
 
@@ -80,12 +71,12 @@ class UserForgotPasswordView(SuccessMessageMixin, PasswordResetView):
     form_class = UserForgotPasswordForm
     template_name = "users/user_password_reset.html"
     success_url = reverse_lazy("mailing:home")
-    success_message = "Письмо с инструкцией по восстановлению пароля отправлена на ваш email"
+    success_message = "Письмо с инструкцией по восстановлению пароля отправлена на ваш email."
     email_template_name = "users/password_reset_mail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Запрос на восстановление пароля"
+        context["title"] = "Запрос на восстановление пароля."
         return context
 
 
@@ -98,7 +89,7 @@ class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Установить новый пароль"
+        context["title"] = "Установить новый пароль."
         return context
 
 
@@ -109,13 +100,24 @@ class UserListView(LoginRequiredMixin, ListView):
 
 
 class BlockUserView(LoginRequiredMixin, View):
-    """Контроллер блокировки пользователей сервиса."""
-
+    """Контроллер блокировки пользователей сайта."""
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         if not request.user.has_perm("can_block_user"):
             return HttpResponseForbidden("У вас нет прав на это действие.")
 
         user.is_active = False
+        user.save()
+        return redirect("users:user_list")
+
+
+class UnblockUserView(LoginRequiredMixin, View):
+    """Контроллер разблокировки пользователей сайта."""
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        if not request.user.has_perm("can_block_user"):
+            return HttpResponseForbidden("У вас нет прав на это действие.")
+
+        user.is_active = True
         user.save()
         return redirect("users:user_list")

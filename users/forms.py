@@ -18,18 +18,21 @@ class UserRegisterForm(UserCreationForm):
         self.fields["password1"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields["password2"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
 
+    def clean_email_address(self):
+        email_address = self.cleaned_data.get("email")
+        if User.objects.filter(email=email_address).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Этот адрес электронной почты уже зарегистрирован!")
+        return email_address
 
-class UserUpdateForm(forms.ModelForm):
-    """ ."""
+
+class UserForm(forms.ModelForm):
+    """Форма обновления данных."""
     class Meta:
         model = User
-        fields = ["email", "first_name", "last_name", "phone_number", "avatar", "country"]
+        fields = ("first_name", "last_name", "phone_number", "avatar", "country")
 
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
-        self.fields["email"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
-        )
+        super(UserForm, self).__init__(*args, **kwargs)
         self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
         self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["phone_number"].widget.attrs.update(
@@ -54,14 +57,13 @@ class UserUpdateForm(forms.ModelForm):
 class UserForgotPasswordForm(PasswordResetForm):
     """Запрос на восстановление пароля."""
     def __init__(self, *args, **kwargs):
-        """Обновление стилей формы."""
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
 
 
 class UserSetNewPasswordForm(SetPasswordForm):
-    """."""
+    """Изменение пароля после подтверждения."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
