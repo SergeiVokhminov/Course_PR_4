@@ -29,6 +29,10 @@ class RecipientInfoView(TemplateView):
     template_name = "mailing/recipient_info.html"
 
 
+class ReportInfoView(TemplateView):
+    template_name = "mailing/report_info.html"
+
+
 class MainPageView(TemplateView):
     models = [Recipient, Mailing]
     template_name = "mailing/main.html"
@@ -266,7 +270,7 @@ def sending_mail(request, pk):
     mail = Mailing.objects.get(pk=pk)
     email_from = settings.EMAIL_HOST_USER
     attempts_list = []
-    subject = mail.message.subject
+    subject = mail.message.topic
     message = mail.message.text
     owner = mail.owner
     recipients_list = [recipient.email for recipient in mail.recipients.all()]

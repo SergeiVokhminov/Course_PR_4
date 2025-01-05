@@ -67,7 +67,7 @@ class Mailing(models.Model):
     )
 
     def __str__(self):
-        return f"{self.message.topic} - {self.status}"
+        return f"{self.message} - {self.status}"
 
     class Meta:
         verbose_name = "Рассылка"
