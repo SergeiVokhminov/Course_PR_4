@@ -8,38 +8,50 @@
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:message_info' %}" role="button">
-                        Посмотреть информацию о моих сообщения
+                        Сообщения
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:recipient_info' %}" role="button">
-                        Посмотреть информацию о получателях рассылок
+                        Получатели рассылок
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'mailing:mailing_info' %}" role="button">
-                        Посмотреть информацию о моих рассылках
+                        Рассылки
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'users:user_info' %}" role="button">
+                        Пользователи
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'users:user_detail' user.pk %}" role="button">
+                        Профиль
                     </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm">
                     <a class="btn btn-primary" href="{% url 'mailing:main' %}" role="button">
-                        Общая информация по рассылкам
+                        Общая информация по моим рассылкам
                     </a>
                 </div>
             </div>
             <div class="col">
-<!--                <div class="card shadow-sm">-->
-                    <form method="post" action="{% url 'users:logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary" role="button">Выход</button>
-                    </form>
-                </div>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" role="button">Выход</button>
+                </form>
             </div>
             {% else %}
             <div class="col">

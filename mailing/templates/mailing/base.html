@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 {% load static %}
-
 <html lang="ru">
 <head>
     <meta charset="utf-8">
@@ -11,23 +9,19 @@
     .class { padding: 20px 25px; }
 </head>
 <body>
-
 <header data-bs-theme="dark">
 {% include "mailing/includes/menu.html" %}
 </header>
-
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     {% if user.is_authenticated %}
-    <h1>Привет, {{ user.slug | default:user.email }}</h1>
+    <h1>Привет, {{ user.first_name | default:user.email }}</h1>
     {% else %}
     <h1 class="display-4">Сервис управления рассылками</h1>
     <p class="lead">С.У.Р - это отличный вариант управлять своими рассылками.</p>
     {% endif %}
 </div>
-
 {% block content %}
 {% endblock %}
-
 <script src="{% static '/js/bootstrap.bundle.min.js' %}"></script><!-- Подключите статические файлы со скриптами Bootstrap -->
 </body>
 </html>

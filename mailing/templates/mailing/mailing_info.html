@@ -7,29 +7,23 @@
             {% if user.is_authenticated %}
             <div class="col">
                 <div class="card shadow-sm">
-                    <div class="card-header">
-                        <a class="btn btn-primary" href="{% url 'mailing:mailing_list' %}" role="button">
-                            Управление рассылками
-                        </a>
-                    </div>
+                    <a class="btn btn-primary" href="{% url 'mailing:mailing_list' %}" role="button">
+                        Список рассылок
+                    </a>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm">
-                    <div class="card-header">
-                        <a class="btn btn-primary" href="{% url 'mailing:mailing_list' %}" role="button">
-                            Список рассылок
-                        </a>
-                    </div>
+                    <a class="btn btn-primary" href="{% url 'mailing:mailing_create' %}" role="button">
+                        Добавить рассылку
+                    </a>
                 </div>
             </div>
             <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <a class="btn btn-primary" href="{% url 'mailing:mailing_create' %}" role="button">
-                            Добавить рассылку
-                        </a>
-                    </div>
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:home' %}" role="button">
+                        На главную
+                    </a>
                 </div>
             </div>
             {% endif %}

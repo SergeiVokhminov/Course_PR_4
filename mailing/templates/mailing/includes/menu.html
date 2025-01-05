@@ -11,18 +11,30 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'mailing:message_list' %}" role="button">
-                        Информация о сообщениях
+                    <a class="nav-link active" href="{% url 'mailing:message_info' %}" role="button">
+                        Сообщения
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/" role="button">
-                        Информация о получателях рассылок
+                    <a class="nav-link active" href="{% url 'mailing:recipient_info' %}" role="button">
+                        Получатели рассылок
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/" role="button">
-                        Информация о рассылках
+                    <a class="nav-link active" href="{% url 'mailing:mailing_info' %}" role="button">
+                        Рассылки
+                    </a>
+                </li>
+                {% if "users.view_user" in perms %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:user_info' %}" role="button">
+                        Пользователи
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:user_detail' user.pk %}" role="button">
+                        Профиль
                     </a>
                 </li>
                 <form method="post" action="{% url 'users:logout' %}">
