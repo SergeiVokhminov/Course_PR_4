@@ -1,12 +1,12 @@
 from django.core.cache import cache
 
 from config.settings import CACHE_ENABLED
-from mailing.models import Mailing, Mailing_Attempts, Message, Recipient
+from mailing.models import Mailing, MailingAttempts, Message, Recipient
 
 
 def get_message_list():
-    """Работает с кэш при просмотре всех сообщений.
-    Записывает и достаёт из кэш."""
+    """Работает с кэшем при просмотре всех сообщений.
+    Записывает и достаёт из кэша."""
     if not CACHE_ENABLED:
         return Message.objects.all()
     else:
@@ -21,8 +21,8 @@ def get_message_list():
 
 
 def get_recipient_list():
-    """Работает с кэш при просмотре всех получателей.
-    Записывает и достаёт из кэш."""
+    """Работает с кэшем при просмотре всех получателей.
+    Записывает и достаёт из кэша."""
     if not CACHE_ENABLED:
         return Recipient.objects.all()
     else:
@@ -37,8 +37,8 @@ def get_recipient_list():
 
 
 def get_mailing_list():
-    """Работает с кэш при просмотре всех рассылок.
-    Записывает и достаёт из кэш."""
+    """Работает с кэшем при просмотре всех рассылок.
+    Записывает и достаёт из кэша."""
     if not CACHE_ENABLED:
         return Mailing.objects.all()
     else:
@@ -53,16 +53,16 @@ def get_mailing_list():
 
 
 def get_mailing_attempts_list():
-    """Работает с кэш при просмотре всех попыток отправки рассылок.
-    Записывает и достаёт из кэш."""
+    """Работает с кэшем при просмотре всех попыток отправки рассылок.
+    Записывает и достаёт из кэша."""
     if not CACHE_ENABLED:
-        return Mailing_Attempts.objects.all()
+        return MailingAttempts.objects.all()
     else:
         key = "mailing_attempts_list"
         attempts = cache.get(key)
         if attempts is not None:
             return attempts
         else:
-            attempts = Mailing_Attempts.objects.all()
+            attempts = MailingAttempts.objects.all()
             cache.set(key, attempts, 60)
             return attempts
