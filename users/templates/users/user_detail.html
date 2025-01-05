@@ -5,22 +5,18 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <p class="card-text">"Электронная почта": {{ object.email }}</p>
-                        <h4 class="my-0 font-weight-normal mt-3">Имя: {{object.first_name}}</h4>
-                        <h4 class="my-0 font-weight-normal mt-3">Фамилия: {{object.last_name}}</h4>
-                        <p class="card-text">Телефон: {{ object.phone_number | default:"-" }}</p>
-                        <p class="card-text">Страна: {{ object.country | default:"-" }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a class="btn btn-secondary" href="{% url 'users:user_list' %}" role="button">Назад</a>
-                                <a class="btn btn-primary" href="{% url 'users:user_update' user.pk %}" role="button">
-                                    Редактировать
-                                </a>
-                            </div>
-                        </div>
+            <div class="container mt-3">
+                <h4 class="my-0 font-weight-normal mt-3">Электронная почта: {{ object.email }}</h4>
+                <h4 class="my-0 font-weight-normal mt-3">Имя: {{object.first_name}}</h4>
+                <h4 class="my-0 font-weight-normal mt-3">Фамилия: {{object.last_name}}</h4>
+                <h4 class="my-0 font-weight-normal mt-3">Телефон: {{ object.phone_number | default:"не указан" }}</h4>
+                <h4 class="my-0 font-weight-normal mt-3">Страна: {{ object.country | default:"не указано" }}</h4>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a class="btn btn-secondary" href="{% url 'mailing:home' %}" role="button">Назад</a>
+                        <a class="btn btn-primary" href="{% url 'users:user_update' user.pk %}" role="button">
+                            Редактировать
+                        </a>
                     </div>
                 </div>
             </div>
