@@ -1,0 +1,47 @@
+{% extends 'mailing/base.html' %}
+{% block title %}Отчеты по рассылкам{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            {% if user.is_authenticated %}
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:finish_mailing' user.pk %}" role="button">
+                        Информирование о завершении рассылки
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:mailing_attempts_list' %}" role="button">
+                        Отчёты о рассылках
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="btn btn-primary" href="{% url 'mailing:send_mail' user.pk %}" role="button">
+                        Отчёт об отправке рассылки
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="btn btn-primary" href="{% url 'mailing:main' %}" role="button">
+                        Общая информация по моим рассылкам
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:home' %}" role="button">
+                        На главную
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
