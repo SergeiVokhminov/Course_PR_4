@@ -9,13 +9,6 @@ class Recipient(models.Model):
     first_name = models.CharField(max_length=250, verbose_name="Имя получателя")
     last_name = models.CharField(max_length=250, verbose_name="Фамилия получателя")
     patronymic = models.CharField(max_length=250, null=True, blank=True, verbose_name="Отчество получателя")
-    slug = models.SlugField(
-        max_length=255,
-        unique=True,
-        db_index=True,
-        verbose_name="URL",
-        help_text="Уникальное имя формируется из фамилии и имени",
-    )
     comment = models.TextField(verbose_name="Комментарий", blank=True, null=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name="recipients", verbose_name="Владелец"
@@ -60,7 +53,7 @@ class Mailing(models.Model):
         verbose_name="Статус рассылки",
         help_text="Выберите статус рассылки",
         choices=STATUS_CHOICES,
-        default=CREATED,
+        default=CREATED
     )
     message = models.ForeignKey(
         Message, on_delete=models.SET_NULL, verbose_name="Сообщение", help_text="Выберите сообщение для рассылки",
@@ -70,7 +63,7 @@ class Mailing(models.Model):
         Recipient, verbose_name="Получатели", help_text="Выберите получателей для рассылки"
     )
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="newsletter", verbose_name="Владелец"
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="mailings", verbose_name="Владелец"
     )
 
     def __str__(self):
@@ -83,10 +76,10 @@ class Mailing(models.Model):
         permissions = [("can_finish_mailing", "can finish mailing")]
 
 
-class Mailing_Attempts(models.Model):
+class MailingAttempts(models.Model):
     """Модель попыток рассылки."""
     SUCCESS = "успешно"
-    FAILURE = "неуспешно"
+    FAILURE = "не успешно"
     ATTEMPT_STATUS_CHOICES = [(SUCCESS, "успешно"), (FAILURE, "не успешно")]
     attempt_date = models.DateTimeField(
         verbose_name="Дата попытки", help_text="Введите дату и время попытки", auto_now_add=True
@@ -96,14 +89,11 @@ class Mailing_Attempts(models.Model):
         verbose_name="Статус попытки",
         help_text="Введите статус",
         choices=ATTEMPT_STATUS_CHOICES,
-        default=SUCCESS,
+        default=SUCCESS
     )
-    mail_server_response = models.TextField(
-        verbose_name="Ответ сервера почты", help_text="Введите ответ сервера почты", null=True, blank=True
-    )
+    mail_server_response = models.TextField(verbose_name="Ответ сервера почты", help_text="Введите ответ сервера почты")
     mailing = models.ForeignKey(
-        Mailing, on_delete=models.CASCADE, verbose_name="Рассылка", help_text="Выберите рассылку для попытки",
-        null=True, blank=True,
+        Mailing, on_delete=models.CASCADE, verbose_name="Рассылка", help_text="Выберите рассылку для попытки"
     )
     owner = models.ForeignKey(
         User,
@@ -111,7 +101,7 @@ class Mailing_Attempts(models.Model):
         on_delete=models.CASCADE,
         related_name="mailing_attempts",
         null=True,
-        blank=True,
+        blank=True
     )
 
     def __str__(self):
