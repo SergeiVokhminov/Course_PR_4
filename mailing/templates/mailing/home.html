@@ -1,4 +1,5 @@
 {% extends 'mailing/base.html' %}
+{% load my_tags %}
 {% block title %}Главная страница{% endblock %}
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
@@ -33,6 +34,7 @@
                     </a>
                 </div>
             </div>
+            {% if perms.user.can_block_users %}
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'users:user_info' %}" role="button">
@@ -40,6 +42,7 @@
                     </a>
                 </div>
             </div>
+            {% endif %}
             <div class="col">
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'users:user_detail' user.pk %}" role="button">

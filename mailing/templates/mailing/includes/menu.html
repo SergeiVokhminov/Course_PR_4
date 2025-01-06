@@ -20,7 +20,10 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'mailing:mailing_list' %}" role="button">Рассылки</a>
                 </li>
-                {% if perms.user.can_block_users %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" role="button">Отчеты</a>
+                </li>
+                {% if "user.view_user" in perms %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'users:user_list' %}" role="button">Пользователи</a>
                 </li>
