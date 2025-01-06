@@ -7,7 +7,7 @@ from .models import Mailing, Message, Recipient
 class RecipientForm(forms.ModelForm):
     class Meta:
         model = Recipient
-        fields = ("email", "first_name", "last_name", "patronymic", "comment")
+        fields = ("email", "first_name", "last_name", "comment")
 
     def __init__(self, *args, **kwargs):
         super(RecipientForm, self).__init__(*args, **kwargs)
@@ -16,14 +16,7 @@ class RecipientForm(forms.ModelForm):
         )
         self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
         self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
-        self.fields["patronymic"].widget.attrs.update({"class": "form-control", "placeholder": "Введите отчество"})
         self.fields["comment"].widget.attrs.update({"class": "form-control", "placeholder": "Введите комментарий"})
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        if Recipient.objects.filter(email=email).exists():
-            raise ValidationError("Такой адрес электронной почты уже существует в БД!")
-        return email
 
 
 class MessageForm(forms.ModelForm):
@@ -40,12 +33,12 @@ class MessageForm(forms.ModelForm):
 class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ("start_sending", "end_sending", "status", "message", "recipients")
+        fields = ("mailing_name", "message", "recipients")
 
     def __init__(self, *args, **kwargs):
         super(MailingForm, self).__init__(*args, **kwargs)
-        self.fields["start_sending"].widget.attrs.update({"class": "form-control", "type": "datetime-local"})
-        self.fields["end_sending"].widget.attrs.update({"class": "form-control", "type": "datetime-local"})
-        self.fields["recipients"].widget.attrs.update({"class": "form-control"})
-        self.fields["status"].widget.attrs.update({"class": "form-control"})
+        self.fields["mailing_name"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите название рассылки"}
+        )
         self.fields["message"].widget.attrs.update({"class": "form-control"})
+        self.fields["recipients"].widget.attrs.update({"class": "form-control"})
