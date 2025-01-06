@@ -1,6 +1,7 @@
 import secrets
 
 from django.conf import settings
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -22,26 +23,39 @@ class UserInfoView(TemplateView):
 
 class UserRegisterView(CreateView):
     """Контроллер регистрации профиля."""
-    model = User
+    # model = User
     form_class = UserRegisterForm
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
         user = form.save()
-        user.is_active = False
-        token = secrets.token_hex(16)
-        user.token = token
-        user.save()
-        host = self.request.get_host()
-        url = f"http://{host}/users/email_confirm/{token}/"
-        send_mail(
-            subject="Подтверждение регистрации.",
-            message=f"Для активации вашего аккаунта перейдите по ссылке: {url}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[user.email,]
-        )
+        login(self.request, user)
+        self.send_welcome_email(user.email)
         return super().form_valid(form)
+
+    def send_welcome_email(self, user_email):
+        subject = 'Добро пожаловать в наш сервис'
+        message = 'Спасибо, что зарегистрировались в нашем сервисе!'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [user_email]
+        send_mail(subject, message, from_email, recipient_list)
+
+    # def form_valid(self, form):
+    #     user = form.save()
+    #     user.is_active = False
+    #     token = secrets.token_hex(16)
+    #     user.token = token
+    #     user.save()
+    #     host = self.request.get_host()
+    #     url = f"http://{host}/users/email_confirm/{token}/"
+    #     send_mail(
+    #         subject="Подтверждение регистрации.",
+    #         message=f"Для активации вашего аккаунта перейдите по ссылке: {url}",
+    #         from_email=settings.EMAIL_HOST_USER,
+    #         recipient_list=[user.email,],
+    #     )
+    #     return super().form_valid(form)
 
 
 def email_verification(request, token):

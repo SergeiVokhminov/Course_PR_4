@@ -7,18 +7,18 @@ from users.models import User
 class UserRegisterForm(UserCreationForm):
     """Форма регистрации."""
     phone_number = forms.CharField(max_length=15, required=False, label="Номер телефона")
-    first_name = forms.CharField(max_length=100, required=True, label="Имя")
+    nickname = forms.CharField(max_length=100, required=True, label="Никнейм")
 
     class Meta:
         model = User
-        fields = ["email", "first_name", "phone_number", "password1", "password2"]
+        fields = ["email", "nickname", "phone_number", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
         )
-        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
+        self.fields["nickname"].widget.attrs.update({"class": "form-control", "placeholder": "Введите никнейм"})
         self.fields["phone_number"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите номер телефона"}
         )
@@ -34,12 +34,15 @@ class UserRegisterForm(UserCreationForm):
 
 class UserForm(forms.ModelForm):
     """Форма обновления данных."""
+    nickname = forms.CharField(max_length=100, required=True, label="Никнейм")
+
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "phone_number", "avatar", "country")
+        fields = ("nickname", "first_name", "last_name", "phone_number", "avatar", "country")
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
+        self.fields["nickname"].widget.attrs.update({"class": "form-control", "placeholder": "Введите никнейм"})
         self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
         self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["phone_number"].widget.attrs.update(
