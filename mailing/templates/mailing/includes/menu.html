@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">C|У|Р</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{% url 'mailing:home' %}">C|У|Р</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -11,31 +12,21 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'mailing:message_list' %}" role="button">
-                        Сообщения
-                    </a>
+                    <a class="nav-link active" href="{% url 'mailing:message_list' %}" role="button">Сообщения</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'mailing:recipient_list' %}" role="button">
-                        Получатели
-                    </a>
+                    <a class="nav-link active" href="{% url 'mailing:recipient_list' %}" role="button">Получатели</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'mailing:mailing_list' %}" role="button">
-                        Рассылки
-                    </a>
+                    <a class="nav-link active" href="{% url 'mailing:mailing_list' %}" role="button">Рассылки</a>
                 </li>
-                {% if "users.view_user" in perms %}
+                {% if perms.user.can_block_users %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'users:user_list' %}" role="button">
-                        Пользователи
-                    </a>
+                    <a class="nav-link active" href="{% url 'users:user_list' %}" role="button">Пользователи</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'users:user_detail' user.pk %}" role="button">
-                        Мой профиль
-                    </a>
+                    <a class="nav-link active" href="{% url 'users:user_detail' user.pk %}" role="button">Мой профиль</a>
                 </li>
                 <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}

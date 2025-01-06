@@ -1,6 +1,7 @@
 {% extends 'mailing/base.html' %}
 {% block title %}Список рассылок{% endblock %}
 {% block content %}
+<h2 class="mt-2 text-center">Список моих рассылок</h2>
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -8,12 +9,15 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <p class="card-text">Рассылка "{{ mailing.message.topic }}"</p>
+                        <p class="card-text">Тема сообщения: "{{ mailing.message.topic }}"</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a class="btn btn-primary" href="{% url 'mailing:mailing_detail' mailing.pk %}"
                                    role="button">
                                     Подробнее
+                                </a>
+                                <a class="btn btn-primary" href="{% url 'mailing:mailing_info' %}" role="button">
+                                    Назад
                                 </a>
                                 <a class="btn btn-primary" href="{% url 'mailing:home' %}" role="button">
                                     На главную

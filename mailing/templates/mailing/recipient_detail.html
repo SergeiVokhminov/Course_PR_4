@@ -1,9 +1,9 @@
 {% extends 'mailing/base.html' %}
 {% block title %}Подробнее о получателе{% endblock %}
 {% block content %}
+<h2 class="mt-2 text-center">Детали получателя</h2>
 <div class="container">
     <div class="container mt-3">
-        <h4 class="my-0 font-weight-normal mt-3">Получатель:</h4>
         <h4 class="my-0 font-weight-normal mt-3">Имя: {{recipient.first_name}}</h4>
         <h4 class="my-0 font-weight-normal mt-3">Фамилия: {{recipient.last_name}}</h4>
         <h4 class="my-0 font-weight-normal mt-3">Адрес почты: {{recipient.email}}</h4>
@@ -12,10 +12,18 @@
             <div class="btn-group">
                 {% if recipient.owner == user %}
                 <a class="btn btn-lg btn-block btn-outline-primary"
-                   href="{% url 'mailing:recipient_delete' recipient.pk %}" role="button">Удалить</a>
+                   href="{% url 'mailing:recipient_update' recipient.pk %}" role="button">
+                    Редактировать
+                </a>
+                <a class="btn btn-lg btn-block btn-outline-primary"
+                   href="{% url 'mailing:recipient_delete' recipient.pk %}" role="button">
+                    Удалить
+                </a>
                 {% endif %}
                 <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'mailing:recipient_list' %}"
-                   role="button">Назад</a>
+                   role="button">
+                    Назад
+                </a>
             </div>
         </div>
     </div>
