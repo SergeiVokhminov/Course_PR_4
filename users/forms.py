@@ -6,14 +6,21 @@ from users.models import User
 
 class UserRegisterForm(UserCreationForm):
     """Форма регистрации."""
+    phone_number = forms.CharField(max_length=15, required=False, label="Номер телефона")
+    first_name = forms.CharField(max_length=100, required=True, label="Имя")
+
     class Meta:
         model = User
-        fields = ["email", "password1", "password2"]
+        fields = ["email", "first_name", "phone_number", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
+        )
+        self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
+        self.fields["phone_number"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите номер телефона"}
         )
         self.fields["password1"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields["password2"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})

@@ -16,7 +16,7 @@ from users.models import User
 
 
 class UserInfoView(TemplateView):
-    """Контролер представления страницы с информации о пользователях."""
+    """Контролер представления страницы с информацией о пользователях."""
     template_name = "users/user_info.html"
 
 
@@ -39,7 +39,7 @@ class UserRegisterView(CreateView):
             subject="Подтверждение регистрации.",
             message=f"Для активации вашего аккаунта перейдите по ссылке: {url}",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[user.email],
+            recipient_list=[user.email,]
         )
         return super().form_valid(form)
 
@@ -49,7 +49,7 @@ def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
-    return redirect("users:login")
+    return redirect(reverse("users:login"))
 
 
 class UserDetailsView(DetailView):
