@@ -1,4 +1,5 @@
 {% extends 'mailing/base.html' %}
+{% load my_tags %}
 {% block title %}Информация о пользователях{% endblock %}
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
@@ -9,13 +10,6 @@
                 <div class="card shadow-sm" >
                     <a class="btn btn-primary" href="{% url 'users:user_list' %}" role="button">
                         Список пользователей
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <a class="btn btn-primary" href="/" role="button">
-                        Создать нового пользователя
                     </a>
                 </div>
             </div>

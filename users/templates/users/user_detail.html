@@ -4,33 +4,34 @@
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-1">
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <img src="{{ object.avatar | media_filter }}" width="100%" height="250">
                         <h4 class="my-0 font-weight-normal mt-3">Электронная почта: {{ object.email }}</h4>
-                        <h4 class="my-0 font-weight-normal mt-3">Имя: {{object.first_name}}</h4>
-                        <h4 class="my-0 font-weight-normal mt-3">Фамилия: {{object.last_name}}</h4>
+                        <h4 class="my-0 font-weight-normal mt-3">Имя: {{ object.first_name }}</h4>
+                        <h4 class="my-0 font-weight-normal mt-3">Фамилия: {{ object.last_name }}</h4>
                         <h4 class="my-0 font-weight-normal mt-3">Телефон: {{ object.phone_number | default:"не указан" }}</h4>
-                        <h4 class="my-0 font-weight-normal mt-3">Страна: {{ object.country | default:"не указано" }}</h4>
+                        <h4 class="my-0 font-weight-normal mt-3">Страна: {{ object.country | default:"не указана" }}</h4>
+                        <h4 class="my-0 font-weight-normal mt-3">Дата регистрации: {{ object.date_joined }}</h4>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'users:user_list' %}" role="button">Назад</a>
-                                <a class="btn btn-primary" href="{% url 'users:user_update' user.pk %}" role="button">
+                                <a class="btn btn-secondary" href="{% url 'users:user_info' %}" role="button">Назад</a>
+                                <a class="btn btn-secondary" href="{% url 'users:user_update' user.pk %}" role="button">
                                     Редактировать
                                 </a>
                                 {% if user.is_active %}
                                 <form action="{% url 'users:user_block' user.pk %}" method="post">
                                     {% csrf_token %}
-                                    <button class="btn btn-lg btn-block btn-danger" role="button" type="submit">
+                                    <button class="btn btn-secondary" role="button" type="submit">
                                         Заблокировать пользователя
                                     </button>
                                 </form>
                                 {% else %}
                                 <form action="{% url 'users:user_unblock' user.pk %}" method="post">
                                     {% csrf_token %}
-                                    <button class="btn btn-lg btn-block btn-primary" role="button" type="submit">
+                                    <button class="btn btn-secondary" role="button" type="submit">
                                         Разблокировать пользователя
                                     </button>
                                 </form>
