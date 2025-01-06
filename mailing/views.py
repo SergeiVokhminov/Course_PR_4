@@ -1,12 +1,13 @@
 from datetime import datetime
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView, DeleteView, CreateView, DetailView, ListView
+from django.views.generic import TemplateView, DetailView, ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from mailing.forms import MessageForm, MailingForm, RecipientForm
 from mailing.models import Recipient, Mailing, Message, MailingAttempts
@@ -34,11 +35,13 @@ class ReportInfoView(TemplateView):
 
 
 class MainPageView(TemplateView):
-    models = [Recipient, Mailing]
+    """Контроллер отображения отчета."""
+    models = [Recipient, Mailing, Message]
     template_name = "mailing/main.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["message_all"] = Message.objects.all()
         context["recipients_all"] = Recipient.objects.all()
         context["mailing_all"] = Mailing.objects.all()
         context["mailing_active"] = Mailing.objects.filter(status=Mailing.ACTIVE)
@@ -77,7 +80,7 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MessageUpdateView(LoginRequiredMixin, UpdateView):
+class MessageUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Контроллер изменения сообщения."""
     model = Message
     form_class = MessageForm
@@ -95,7 +98,7 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("mailing:message_detail", kwargs={"pk": self.object.pk})
 
 
-class MessageDeleteView(LoginRequiredMixin, DeleteView):
+class MessageDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Контроллер удаления сообщения."""
     model = Message
     template_name = "mailing/message_confirm_delete.html"
@@ -149,7 +152,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Контроллер изменения рассылки."""
     model = Mailing
     form_class = MailingForm
@@ -167,7 +170,7 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("mailing:mailing_detail", kwargs={"pk": self.object.pk})
 
 
-class MailingDeleteView(LoginRequiredMixin, DeleteView):
+class MailingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Контроллер удаления рассылки."""
     model = Mailing
     template_name = "mailing/mailing_confirm_delete.html"
@@ -179,6 +182,25 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
 
     def handle_no_permissions(self):
         return HttpResponseForbidden("У вас нет прав на это действие.")
+
+
+class MailingAttemptsListView(LoginRequiredMixin, ListView):
+    """Контроллер отображения списка попыток отправки."""
+    model = MailingAttempts
+    template_name = "mailing/mailing_attempts_list.html"
+
+    def get_queryset(self):
+        if self.request.user.has_perm("mailing.view_mailing_attempts"):
+            return get_mailing_attempts_list()
+        return get_mailing_attempts_list().filter(owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        attempt = self.get_queryset()
+        context["success"] = attempt.filter(attempt_status="успешно").count()
+        context["failure"] = attempt.filter(attempt_status="не успешно").count()
+        context["total"] = attempt.count()
+        return context
 
 
 class RecipientListView(LoginRequiredMixin, ListView):
@@ -213,7 +235,7 @@ class RecipientCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class RecipientUpdateView(LoginRequiredMixin, UpdateView):
+class RecipientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Контроллер изменения получателя."""
     model = Recipient
     form_class = RecipientForm
@@ -231,7 +253,7 @@ class RecipientUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy("mailing:recipient_detail", kwargs={"pk": self.object.pk})
 
 
-class RecipientDeleteView(LoginRequiredMixin, DeleteView):
+class RecipientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Контроллер удаления получателя."""
     model = Recipient
     template_name = "mailing/recipient_confirm_delete.html"
@@ -243,25 +265,6 @@ class RecipientDeleteView(LoginRequiredMixin, DeleteView):
 
     def handle_no_permissions(self):
         return HttpResponseForbidden("У вас нет прав на это действие.")
-
-
-class MailingAttemptsListView(LoginRequiredMixin, ListView):
-    """Контроллер отображения списка попыток отправки."""
-    model = MailingAttempts
-    template_name = "mailing/mailing_attempts_list.html"
-
-    def get_queryset(self):
-        if self.request.user.has_perm("mailing.view_mailing_attempts"):
-            return get_mailing_attempts_list()
-        return get_mailing_attempts_list().filter(owner=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        attempt = self.get_queryset()
-        context["success"] = attempt.filter(attempt_status="успешно").count()
-        context["failure"] = attempt.filter(attempt_status="не успешно").count()
-        context["total"] = attempt.count()
-        return context
 
 
 def sending_mail(request, pk):
@@ -279,7 +282,7 @@ def sending_mail(request, pk):
             send_mail(subject, message, email_from, recipient_list=[recipient])
             if mail.status == Mailing.CREATED:
                 mail.status = Mailing.ACTIVE
-                mail.start_at = datetime.now()
+                mail.start_sending = datetime.now()
                 mail.save()
             mailing_attempts = MailingAttempts(
                 attempt_date=datetime.now(),
@@ -294,7 +297,7 @@ def sending_mail(request, pk):
         except Exception as e:
             if mail.status == Mailing.CREATED:
                 mail.status = Mailing.ACTIVE
-                mail.start_at = datetime.now()
+                mail.start_sending = datetime.now()
                 mail.save()
             mailing_attempts = MailingAttempts(
                 attempt_date=datetime.now(),
@@ -315,7 +318,7 @@ def finish_mailing(request, pk):
     помечает рассылку как завершенную, вносит необходимые данные в БД"""
     mail = Mailing.objects.get(pk=pk)
     mail.status = Mailing.FINISHED
-    mail.end_at = datetime.now()
+    mail.end_sending = datetime.now()
     mail.save()
     context = {"mail": mail}
     return render(request, "mailing/finished_mailing_info.html", context)

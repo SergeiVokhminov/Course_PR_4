@@ -54,17 +54,17 @@ class Mailing(models.Model):
         verbose_name="Статус рассылки",
         help_text="Выберите статус рассылки",
         choices=STATUS_CHOICES,
-        default="CREATED"
+        default=CREATED
     )
     message = models.ForeignKey(
-        Message, on_delete=models.SET_NULL, verbose_name="Сообщение", help_text="Выберите сообщение для рассылки",
+        Message, on_delete=models.CASCADE, verbose_name="Сообщение", help_text="Выберите сообщение для рассылки",
         null=True, blank=True
     )
     recipients = models.ManyToManyField(
         Recipient, verbose_name="Получатели", help_text="Выберите получателей для рассылки"
     )
     owner = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="mailings", verbose_name="Владелец"
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="mailings", verbose_name="Владелец"
     )
 
     def __str__(self):
@@ -87,7 +87,7 @@ class MailingAttempts(models.Model):
         max_length=100,
         verbose_name="Статус попытки",
         choices=ATTEMPT_STATUS_CHOICES,
-        default="SUCCESS"
+        default=SUCCESS
     )
     mail_server_response = models.TextField(verbose_name="Ответ сервера почты", null=True, blank=True)
     mailing = models.ForeignKey(

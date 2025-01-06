@@ -33,12 +33,15 @@ class MessageForm(forms.ModelForm):
 class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ("mailing_name", "message", "recipients")
+        fields = ("mailing_name", "start_sending", "end_sending", "status", "message", "recipients")
 
     def __init__(self, *args, **kwargs):
         super(MailingForm, self).__init__(*args, **kwargs)
         self.fields["mailing_name"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите название рассылки"}
         )
+        self.fields["start_sending"].widget.attrs.update({"class": "form-control", "type": "datetime-local"})
+        self.fields["end_sending"].widget.attrs.update({"class": "form-control", "type": "datetime-local"})
+        self.fields["status"].widget.attrs.update({"class": "form-control"})
         self.fields["message"].widget.attrs.update({"class": "form-control"})
         self.fields["recipients"].widget.attrs.update({"class": "form-control"})
