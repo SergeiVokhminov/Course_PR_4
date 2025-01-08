@@ -13,6 +13,7 @@ class Recipient(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name="recipients", verbose_name="Владелец"
     )
+    # is_active = models.BooleanField(default=True, verbose_name="активна")
 
     def __str__(self):
         return f"{self.first_name}.{self.last_name} - {self.email}"
@@ -66,6 +67,7 @@ class Mailing(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name="mailings", verbose_name="Владелец"
     )
+    # is_active = models.BooleanField(default=True, verbose_name="активна")
 
     def __str__(self):
         return f"{self.mailing_name} - {self.status}"

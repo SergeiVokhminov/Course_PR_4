@@ -18,6 +18,12 @@ class RecipientForm(forms.ModelForm):
         self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["comment"].widget.attrs.update({"class": "form-control", "placeholder": "Введите комментарий"})
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if Recipient.objects.filter(email=email).exists():
+            raise ValidationError("Такой адрес электронной почты уже существует в БД!")
+        return email
+
 
 class MessageForm(forms.ModelForm):
     class Meta:
