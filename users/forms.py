@@ -6,26 +6,21 @@ from users.models import User
 
 class UserRegisterForm(UserCreationForm):
     """Форма регистрации."""
-    phone_number = forms.CharField(max_length=15, required=False, label="Номер телефона")
-    nickname = forms.CharField(max_length=100, required=True, label="Никнейм")
 
     class Meta:
         model = User
-        fields = ["email", "nickname", "phone_number", "password1", "password2"]
+        fields = ["email", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
         )
-        self.fields["nickname"].widget.attrs.update({"class": "form-control", "placeholder": "Введите никнейм"})
-        self.fields["phone_number"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Введите номер телефона"}
-        )
         self.fields["password1"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields["password2"].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
 
     def clean_email_address(self):
+        """Проверка электронной почты."""
         email_address = self.cleaned_data.get("email")
         if User.objects.filter(email=email_address).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Этот адрес электронной почты уже зарегистрирован!")
@@ -34,15 +29,16 @@ class UserRegisterForm(UserCreationForm):
 
 class UserForm(forms.ModelForm):
     """Форма обновления данных."""
-    nickname = forms.CharField(max_length=100, required=True, label="Никнейм")
 
     class Meta:
         model = User
-        fields = ("nickname", "first_name", "last_name", "phone_number", "avatar", "country")
+        fields = ("email", "first_name", "last_name", "phone_number", "avatar", "country")
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        self.fields["nickname"].widget.attrs.update({"class": "form-control", "placeholder": "Введите никнейм"})
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Введите адрес электронной почты"}
+        )
         self.fields["first_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя"})
         self.fields["last_name"].widget.attrs.update({"class": "form-control", "placeholder": "Введите фамилию"})
         self.fields["phone_number"].widget.attrs.update(
