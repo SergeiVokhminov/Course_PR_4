@@ -1,0 +1,80 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+{% block title %}Главная страница{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            {% if user.is_authenticated %}
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:message_info' %}" role="button">
+                        Управление сообщениям
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:recipient_info' %}" role="button">
+                        Управление получателями рассылок
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:mailing_info' %}" role="button">
+                        Управление рассылками
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'mailing:report_info' %}" role="button">
+                        Отчеты по рассылкам
+                    </a>
+                </div>
+            </div>
+            {% if perms.user.can_block_users %}
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'users:user_info' %}" role="button">
+                        Пользователи сайта
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col">
+                <div class="card shadow-sm" >
+                    <a class="btn btn-primary" href="{% url 'users:user_detail' user.pk %}" role="button">
+                        Профиль
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" role="button">Выход</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'users:login' %}" role="button">Вход</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <a class="btn btn-primary" href="{% url 'users:register' %}" role="button">
+                            Зарегистрироваться
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+{% block title %}Регистрация на сайте{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <h2 class="mb-4">Регистрация</h2>
+        <div class="col">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        <a class="btn btn-primary" href="{% url 'mailing:home' %}">Отмена</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

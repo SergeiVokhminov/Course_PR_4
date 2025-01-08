@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'mailing:home' %}">C|У|Р</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:home' %}" role="button">Главная</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:message_list' %}" role="button">Сообщения</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:recipient_list' %}" role="button">Получатели</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mailing:mailing_list' %}" role="button">Рассылки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" role="button">Отчеты</a>
+                </li>
+                {% if "user.view_user" in perms %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:user_list' %}" role="button">Пользователи</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:user_detail' user.pk %}" role="button">Мой профиль</a>
+                </li>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link">Выход</button>
+                </form>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:login' %}" role="button">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users:register' %}" role="button">Регистрация</a>
+                </li>
+                {% endif %}
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Поиск">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+            </form>
+        </div>
+    </div>
+</nav>

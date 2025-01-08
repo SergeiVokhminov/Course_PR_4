@@ -1,0 +1,45 @@
+{% extends 'mailing/base.html' %}
+{% block title %}Список получателей{% endblock %}
+{% block content %}
+<h2 class="mt-2 text-center">Список получателей для рассылок</h2>
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4 text-center">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Электронный адрес</th>
+                    <th scope="col">Детали</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for recipient in object_list %}
+                <tr>
+                    <th scope="row">{{ recipient.id }}</th>
+                    <td>{{ recipient.first_name }}</td>
+                    <td>{{ recipient.email }}</td>
+                    <td><a class="link" href="{% url 'mailing:recipient_detail' recipient.pk %}">Подробнее</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Нет получателей для отображения.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="btn btn-primary" href="{% url 'mailing:recipient_info' %}" role="button">Назад</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <a class="btn btn-primary" href="{% url 'mailing:home' %}" role="button">На главную</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

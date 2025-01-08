@@ -1,0 +1,25 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+{% block title %}Вход на сайт{% endblock %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <h2 class="mb-4">Вход на сайт</h2>
+        <div class="col-4">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                        <a class="btn btn-primary" href="{% url 'users:password_reset' %}" role="button">
+                            Восстановить пароль
+                        </a>
+                        <a class="btn btn-primary" href="{% url 'mailing:home' %}">Отмена</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
