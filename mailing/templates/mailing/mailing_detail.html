@@ -8,11 +8,12 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <p class="card-text">Рассылка: "{{ mailing.start_sending }}"</p>
+                        <p class="card-text">Рассылка: "{{ mailing.mailing_name }}"</p>
                         <p class="card-text">Время начала: "{{ mailing.start_sending }}"</p>
                         <p class="card-text">Время окончания: "{{ mailing.end_sending }}"</p>
                         <p class="card-text">Статус: "{{ mailing.status }}"</p>
                         <p class="card-text">Тема сообщения: {{ mailing.message | truncatechars:50 }}</p>
+                        <p class="card-text">Владелец: "{{ mailing.owner }}"</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a class="btn btn-secondary" href="{% url 'mailing:mailing_list' %}" role="button">
@@ -23,14 +24,14 @@
                                    role="button">
                                     Редактировать
                                 </a>
+                                <a class="btn btn-danger" href="{% url 'mailing:mailing_delete' mailing.pk %}"
+                                   role="button">
+                                    Удалить
+                                </a>
                                 <a class="btn btn-lg btn-block btn-outline-primary"
                                    href="{% url 'mailing:send_mail' mailing.pk %}"
                                    role="button">
                                     Отправить
-                                </a>
-                                <a class="btn btn-danger" href="{% url 'mailing:mailing_delete' mailing.pk %}"
-                                   role="button">
-                                    Удалить
                                 </a>
                                 {% endif %}
                                 <a class="btn btn-lg btn-block btn-outline-primary"
